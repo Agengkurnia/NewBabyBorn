@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Verifikasi baris — New Baby Born</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <link rel="stylesheet" href="../../wwwroot/css/mobile.css"/>
+  <style>
+    .step-pane { display: none; padding: 12px 16px 24px; }
+    .step-pane.active { display: block; }
+    .footer-actions {
+      position: sticky; bottom: 0; background: #fff;
+      border-top: 1px solid var(--color-border);
+      padding: 10px 12px; display: flex; gap: 8px; z-index: 50;
+    }
+    .footer-actions .btn { flex: 1; }
+    .confirm-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px dashed #eee; }
+    .confirm-row span:last-child { font-weight: 600; text-align: right; max-width: 60%; }
+  </style>
+</head>
+<body>
+<div class="mobile-wrapper">
+  <div class="mobile-header">
+    <a href="list.html"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="title">Verifikasi baris</div>
+    <span class="nbb-chip" style="font-size:10px;padding:2px 8px">NBB</span>
+  </div>
+  <div class="photo-strip" id="photoStrip">
+    <img id="thumb" alt="foto"/>
+    <div>
+      <div style="font-size:12px;font-weight:600" id="itemTitle">Detail OCR</div>
+      <div class="small text-muted">Field bertanda <span class="ocr-badge">OCR</span> dari simulasi</div>
+    </div>
+  </div>
+  <div class="wizard-steps" id="wizardSteps"></div>
+  <div class="mobile-content no-nav" style="padding-bottom:0;display:flex;flex-direction:column">
+    <div style="flex:1;overflow-y:auto" id="panes">
+      <!-- 0 Status -->
+      <div class="step-pane active" data-step="0">
+        <div class="mb-2"><label class="form-label">Produk Prospek <span class="req">*</span> <span class="ocr-badge ocr" data-k="produkProspekId">OCR</span></label><select class="form-select" id="produkProspekId"></select></div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" id="pakai"/>
+          <label class="form-check-label" for="pakai">Checklist Pakai</label>
+        </div>
+        <div class="mb-2"><label class="form-label">Jumlah Pakai</label><input type="number" min="0" class="form-control" id="intJumlahBeli"/></div>
+        <div class="mb-2"><label class="form-label">Kemasan</label><input class="form-control" id="kemasan"/></div>
+        <div class="mb-2"><label class="form-label">Status Saat Ini <span class="req">*</span></label><input class="form-control" id="statusSaatIni"/></div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" id="sample"/>
+          <label class="form-check-label" for="sample">Sample</label>
+        </div>
+        <div class="mb-2"><label class="form-label">Status Hasil Call <span class="req">*</span></label><input class="form-control" id="statusHasilCall"/></div>
+        <div class="mb-2"><label class="form-label">Produk Kompetitor</label><select class="form-select" id="produkKompetitorId"></select></div>
+      </div>
+      <!-- 1 PIC -->
+      <div class="step-pane" data-step="1">
+        <div class="row g-2">
+          <div class="col-6"><label class="form-label">Nama Depan <span class="req">*</span> <span class="ocr-badge ocr" data-k="namaDepanPic">OCR</span></label><input class="form-control" id="namaDepanPic"/></div>
+          <div class="col-6"><label class="form-label">Nama Belakang <span class="ocr-badge ocr" data-k="namaBelakangPic">OCR</span></label><input class="form-control" id="namaBelakangPic"/></div>
+        </div>
+        <div class="mb-2 mt-2"><label class="form-label">Jenis Kelamin <span class="req">*</span></label>
+          <select class="form-select" id="jnsKelaminPic"><option value="">Pilih</option><option>Perempuan</option><option>Laki-laki</option></select>
+        </div>
+        <div class="row g-2">
+          <div class="col-7"><label class="form-label">Tgl Lahir <span class="ocr-badge ocr" data-k="tglLahirPic">OCR</span></label><input type="date" class="form-control" id="tglLahirPic"/></div>
+          <div class="col-5"><label class="form-label">Usia</label><input type="number" class="form-control" id="usia" readonly/></div>
+        </div>
+        <div class="row g-2 mt-1">
+          <div class="col-6"><label class="form-label">Usia Hamil (minggu)</label><input type="number" class="form-control" id="usiaHamilMinggu"/></div>
+          <div class="col-6"><label class="form-label">TG Prediksi Lahir</label><input type="date" class="form-control" id="tglPrediksiLahir"/></div>
+        </div>
+        <div class="mb-2 mt-2"><label class="form-label">Alamat <span class="ocr-badge ocr" data-k="alamat">OCR</span></label><textarea class="form-control" id="alamat" rows="2"></textarea></div>
+        <div class="row g-2">
+          <div class="col-6"><label class="form-label">RT</label><input class="form-control" id="rt"/></div>
+          <div class="col-6"><label class="form-label">RW</label><input class="form-control" id="rw"/></div>
+        </div>
+        <div class="mb-2 mt-2"><label class="form-label">Propinsi</label><select class="form-select" id="propinsiId"></select></div>
+        <div class="mb-2"><label class="form-label">Kota/Kab</label><select class="form-select" id="kotaId"></select></div>
+        <div class="mb-2"><label class="form-label">Kecamatan</label><select class="form-select" id="kecamatanId"></select></div>
+        <div class="mb-2"><label class="form-label">Kelurahan</label><select class="form-select" id="kelurahanId"></select></div>
+        <div class="mb-2"><label class="form-label">No Handphone <span class="req">*</span> <span class="ocr-badge ocr" data-k="noHp">OCR</span></label><input class="form-control" id="noHp" inputmode="numeric"/></div>
+        <div class="mb-2"><label class="form-label">Telp Rumah</label><input class="form-control" id="telpRumah"/></div>
+        <div class="row g-2">
+          <div class="col-8"><label class="form-label">Telp Kantor</label><input class="form-control" id="telpKantor"/></div>
+          <div class="col-4"><label class="form-label">EXT</label><input class="form-control" id="telpExt"/></div>
+        </div>
+        <div class="mb-2 mt-2"><label class="form-label">Email</label><input type="email" class="form-control" id="email"/></div>
+        <div class="mb-2"><label class="form-label">Tanggal Terima Data</label><input type="date" class="form-control" id="tanggalTerimaData"/></div>
+      </div>
+      <!-- 2 Pelanggan -->
+      <div class="step-pane" data-step="2">
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="bitPicAdalahPelanggan"/>
+          <label class="form-check-label" for="bitPicAdalahPelanggan">PIC adalah pelanggan</label>
+        </div>
+        <div class="row g-2">
+          <div class="col-6"><label class="form-label">Nama Depan Pelanggan <span class="ocr-badge ocr" data-k="namaDepanPelanggan">OCR</span></label><input class="form-control" id="namaDepanPelanggan"/></div>
+          <div class="col-6"><label class="form-label">Nama Belakang <span class="ocr-badge ocr" data-k="namaBelakangPelanggan">OCR</span></label><input class="form-control" id="namaBelakangPelanggan"/></div>
+        </div>
+        <div class="mb-2 mt-2"><label class="form-label">Jns Kelamin</label>
+          <select class="form-select" id="jnsKelaminPelanggan"><option value="">Pilih</option><option>Perempuan</option><option>Laki-laki</option></select>
+        </div>
+        <div class="mb-2"><label class="form-label">Tgl Lahir Pelanggan <span class="ocr-badge ocr" data-k="tglLahirPelanggan">OCR</span></label><input type="date" class="form-control" id="tglLahirPelanggan"/></div>
+        <div class="mb-2"><label class="form-label">Hubungan dgn PIC</label><select class="form-select" id="hubunganDgnPic"></select></div>
+        <div class="mb-2"><label class="form-label">Medical Record <span class="ocr-badge ocr" data-k="medicalRecord">OCR</span></label><input class="form-control" id="medicalRecord"/></div>
+      </div>
+      <!-- 3 Konfirmasi -->
+      <div class="step-pane" data-step="3">
+        <p class="small text-muted">Periksa ringkasan, lalu tandai baris ini terverifikasi. Kirim dilakukan dari list setelah semua baris verified.</p>
+        <div id="confirmBox" class="card-soft"></div>
+        <div id="valErr" class="text-danger small" style="display:none"></div>
+      </div>
+    </div>
+    <div class="footer-actions">
+      <button class="btn btn-outline-nbb" id="btnPrev" type="button">Kembali</button>
+      <button class="btn btn-primary-nbb" id="btnNext" type="button">Lanjut</button>
+    </div>
+  </div>
+</div>
+<script src="../../wwwroot/js/nbb-store.js"></script>
+<script>
+(() => {
+  const session = NbbStore.requireSession();
+  if (!session) return;
+
+  const STEPS = ['Status', 'PIC', 'Pelanggan', 'Konfirmasi'];
+  let step = 0;
+  let masters = null;
+  const batch = NbbStore.getDraftCapture();
+  const itemId = new URLSearchParams(location.search).get('itemId');
+
+  if (!batch || !itemId) {
+    location.href = 'list.html';
+    return;
+  }
+
+  let model = NbbStore.getDraftItem(itemId);
+  if (!model) {
+    location.href = 'list.html';
+    return;
+  }
+
+  const isManual = batch.inputMode === 'manual' || !batch.photoDataUrl;
+  const ocrKeys = new Set(model.ocrFieldKeys || []);
+  document.querySelectorAll('.ocr-badge.ocr').forEach((el) => {
+    if (!ocrKeys.has(el.dataset.k)) el.style.display = 'none';
+  });
+  const photoStrip = document.getElementById('photoStrip');
+  if (isManual || !batch.photoDataUrl) {
+    photoStrip.style.display = 'none';
+  } else {
+    document.getElementById('thumb').src = batch.photoDataUrl;
+  }
+  document.getElementById('itemTitle').textContent =
+    ((model.namaDepanPic || '') + ' ' + (model.namaBelakangPic || '')).trim() || 'Detail baris';
+
+  function fillSelect(el, rows, emptyLabel) {
+    el.innerHTML = '';
+    if (emptyLabel !== false) {
+      const o = document.createElement('option');
+      o.value = '';
+      o.textContent = emptyLabel || 'Pilih';
+      el.appendChild(o);
+    }
+    rows.forEach((r) => {
+      const o = document.createElement('option');
+      o.value = r.id;
+      o.textContent = r.nama;
+      el.appendChild(o);
+    });
+  }
+
+  function setVal(id, v) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.type === 'checkbox') el.checked = !!v;
+    else el.value = v == null ? '' : v;
+  }
+
+  function getVal(id) {
+    const el = document.getElementById(id);
+    if (!el) return null;
+    if (el.type === 'checkbox') return el.checked;
+    if (el.type === 'number') return el.value === '' ? null : Number(el.value);
+    return el.value;
+  }
+
+  const ITEM_KEYS = [
+    'produkProspekId','pakai','intJumlahBeli','kemasan','statusSaatIni','sample','statusHasilCall','produkKompetitorId',
+    'namaDepanPic','namaBelakangPic','jnsKelaminPic','tglLahirPic','usia','usiaHamilMinggu','tglPrediksiLahir',
+    'alamat','rt','rw','propinsiId','kotaId','kecamatanId','kelurahanId','noHp','telpRumah','telpKantor','telpExt','email','tanggalTerimaData',
+    'bitPicAdalahPelanggan','namaDepanPelanggan','namaBelakangPelanggan','jnsKelaminPelanggan','tglLahirPelanggan','hubunganDgnPic','medicalRecord'
+  ];
+
+  function applyModelToForm() {
+    ITEM_KEYS.forEach((k) => setVal(k, model[k]));
+  }
+
+  function readFormToModel() {
+    ITEM_KEYS.forEach((k) => { model[k] = getVal(k); });
+    model.usia = NbbStore.calcUsia(model.tglLahirPic);
+    NbbStore.updateDraftItem(itemId, model);
+  }
+
+  function renderSteps() {
+    const box = document.getElementById('wizardSteps');
+    box.innerHTML = STEPS.map((name, i) => {
+      let cls = 'step';
+      if (i === step) cls += ' active';
+      else if (i < step) cls += ' done';
+      return `<div class="${cls}">${i + 1}. ${name}</div>`;
+    }).join('');
+    document.querySelectorAll('.step-pane').forEach((p) => {
+      p.classList.toggle('active', Number(p.dataset.step) === step);
+    });
+    document.getElementById('btnPrev').textContent = step === 0 ? 'Batal' : 'Kembali';
+    document.getElementById('btnNext').textContent = step === STEPS.length - 1 ? 'Tandai terverifikasi' : 'Lanjut';
+    if (step === STEPS.length - 1) renderConfirm();
+  }
+
+  function renderConfirm() {
+    readFormToModel();
+    const L = (col, id) => NbbStore.labelOf(masters, col, id);
+    const rows = [
+      ['RS / Sumber (foto)', L('sumberData', batch.sumberDataId)],
+      ['Produk Prospek', L('produkProspek', model.produkProspekId)],
+      ['PIC', (model.namaDepanPic || '') + ' ' + (model.namaBelakangPic || '')],
+      ['No HP', model.noHp],
+      ['Status', (model.statusSaatIni || '') + ' / ' + (model.statusHasilCall || '')],
+      ['Bayi/Pelanggan', (model.namaDepanPelanggan || '') + ' ' + (model.namaBelakangPelanggan || '')],
+      ['MR', model.medicalRecord || '—']
+    ];
+    document.getElementById('confirmBox').innerHTML = rows.map(([a, b]) =>
+      `<div class="confirm-row"><span>${a}</span><span>${b || '—'}</span></div>`
+    ).join('');
+  }
+
+  async function init() {
+    masters = await NbbStore.ensureMasters();
+    fillSelect(document.getElementById('produkKompetitorId'), masters.produkKompetitor || []);
+    fillSelect(document.getElementById('hubunganDgnPic'), masters.hubunganPic || []);
+    fillSelect(document.getElementById('propinsiId'), masters.propinsi || []);
+    const jsId = batch.jenisSubmissionId;
+    fillSelect(
+      document.getElementById('produkProspekId'),
+      (masters.produkProspek || []).filter((x) => !jsId || x.jenisSubmissionId === jsId)
+    );
+
+    applyModelToForm();
+
+    document.getElementById('tglLahirPic').addEventListener('change', () => {
+      document.getElementById('usia').value = NbbStore.calcUsia(document.getElementById('tglLahirPic').value) ?? '';
+      syncPelangganFromPicIfChecked();
+    });
+
+    function syncPelangganFromPicIfChecked() {
+      if (!document.getElementById('bitPicAdalahPelanggan').checked) return;
+      setVal('namaDepanPelanggan', getVal('namaDepanPic'));
+      setVal('namaBelakangPelanggan', getVal('namaBelakangPic'));
+      setVal('jnsKelaminPelanggan', getVal('jnsKelaminPic'));
+      setVal('tglLahirPelanggan', getVal('tglLahirPic'));
+    }
+
+    function applyPicIsPelanggan(checked) {
+      const ids = ['namaDepanPelanggan', 'namaBelakangPelanggan', 'jnsKelaminPelanggan', 'tglLahirPelanggan'];
+      ids.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.readOnly = !!checked;
+        if (el && el.tagName === 'SELECT') el.disabled = !!checked;
+      });
+      if (checked) syncPelangganFromPicIfChecked();
+    }
+
+    document.getElementById('bitPicAdalahPelanggan').addEventListener('change', (e) => {
+      applyPicIsPelanggan(e.target.checked);
+    });
+    ['namaDepanPic', 'namaBelakangPic', 'jnsKelaminPic'].forEach((id) => {
+      document.getElementById(id).addEventListener('change', syncPelangganFromPicIfChecked);
+      document.getElementById(id).addEventListener('input', syncPelangganFromPicIfChecked);
+    });
+    applyPicIsPelanggan(!!document.getElementById('bitPicAdalahPelanggan').checked);
+
+    function bindWilayahCascade() {
+      const prop = document.getElementById('propinsiId');
+      const kota = document.getElementById('kotaId');
+      const kec = document.getElementById('kecamatanId');
+      prop.onchange = () => {
+        fillSelect(kota, (masters.kota || []).filter((x) => x.propinsiId === prop.value));
+        fillSelect(kec, []);
+        fillSelect(document.getElementById('kelurahanId'), []);
+      };
+      kota.onchange = () => {
+        fillSelect(kec, (masters.kecamatan || []).filter((x) => x.kotaId === kota.value));
+        fillSelect(document.getElementById('kelurahanId'), []);
+      };
+      kec.onchange = () => {
+        fillSelect(document.getElementById('kelurahanId'), (masters.kelurahan || []).filter((x) => x.kecamatanId === kec.value));
+      };
+    }
+    bindWilayahCascade();
+    setVal('propinsiId', model.propinsiId);
+    fillSelect(document.getElementById('kotaId'), (masters.kota || []).filter((x) => x.propinsiId === model.propinsiId));
+    setVal('kotaId', model.kotaId);
+    fillSelect(document.getElementById('kecamatanId'), (masters.kecamatan || []).filter((x) => x.kotaId === model.kotaId));
+    setVal('kecamatanId', model.kecamatanId);
+    fillSelect(document.getElementById('kelurahanId'), (masters.kelurahan || []).filter((x) => x.kecamatanId === model.kecamatanId));
+    setVal('kelurahanId', model.kelurahanId);
+
+    renderSteps();
+  }
+
+  document.getElementById('btnPrev').onclick = () => {
+    if (step === 0) { location.href = 'list.html'; return; }
+    readFormToModel();
+    step--;
+    renderSteps();
+  };
+
+  document.getElementById('btnNext').onclick = () => {
+    readFormToModel();
+    if (step < STEPS.length - 1) {
+      step++;
+      renderSteps();
+      return;
+    }
+    const res = NbbStore.markItemVerified(itemId, model);
+    const err = document.getElementById('valErr');
+    if (!res.ok) {
+      err.style.display = 'block';
+      err.innerHTML = res.errors.map((e) => '• ' + e).join('<br/>');
+      return;
+    }
+    location.href = 'list.html?verified=1';
+  };
+
+  init();
+})();
+</script>
+</body>
+</html>

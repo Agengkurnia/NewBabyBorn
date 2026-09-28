@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../falcon/Prototype"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "New Baby Born"
+	}
+}

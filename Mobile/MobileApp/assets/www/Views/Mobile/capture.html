@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Foto — New Baby Born</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <link rel="stylesheet" href="../../wwwroot/css/mobile.css"/>
+</head>
+<body>
+<div class="mobile-wrapper">
+  <div class="mobile-header">
+    <a href="home.html"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="title">Foto buku baby born</div>
+    <span class="nbb-chip" style="font-size:10px;padding:2px 8px">NBB</span>
+  </div>
+  <div class="mobile-content no-nav" style="padding:16px">
+    <p class="small text-muted mb-3">Ambil atau pilih foto halaman buku. OCR di prototype ini <strong>disimulasikan</strong> (bukan baca gambar nyata).</p>
+    <img id="preview" class="capture-preview capture-placeholder mb-3" alt="Preview" style="display:none"/>
+    <div id="placeholder" class="capture-preview capture-placeholder mb-3">
+      <i class="fa-solid fa-book-open fa-2x"></i>
+      <span>Belum ada foto</span>
+    </div>
+    <input type="file" id="file" accept="image/*" capture="environment" class="d-none"/>
+    <button id="btnPick" class="btn btn-outline-nbb mb-2"><i class="fa-solid fa-images me-2"></i>Ambil / pilih foto</button>
+    <button id="btnOcr" class="btn btn-primary-nbb" disabled><i class="fa-solid fa-wand-magic-sparkles me-2"></i>Proses OCR (simulasi)</button>
+    <div id="err" class="text-danger small mt-2" style="display:none"></div>
+  </div>
+  <div class="loading-overlay" id="loading">
+    <div class="spinner-border text-success" role="status"></div>
+    <div style="font-weight:600;color:#005D41">Menjalankan OCR simulasi…</div>
+  </div>
+</div>
+<script src="../../wwwroot/js/nbb-store.js"></script>
+<script>
+  NbbStore.requireSession();
+  let photoDataUrl = null;
+  const file = document.getElementById('file');
+  const preview = document.getElementById('preview');
+  const placeholder = document.getElementById('placeholder');
+  const btnOcr = document.getElementById('btnOcr');
+
+  document.getElementById('btnPick').onclick = () => file.click();
+  file.onchange = async () => {
+    const f = file.files && file.files[0];
+    if (!f) return;
+    const err = document.getElementById('err');
+    err.style.display = 'none';
+    btnOcr.disabled = true;
+    try {
+      const raw = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('Gagal membaca foto'));
+        reader.readAsDataURL(f);
+      });
+      // Kompres dulu agar tidak melewati kuota localStorage
+      photoDataUrl = await NbbStore.compressImage(raw, 960, 0.65);
+      preview.src = photoDataUrl;
+      preview.style.display = 'block';
+      preview.classList.remove('capture-placeholder');
+      placeholder.style.display = 'none';
+      btnOcr.disabled = false;
+    } catch (e) {
+      err.style.display = 'block';
+      err.textContent = String(e.message || e);
+    }
+  };
+
+  btnOcr.onclick = async () => {
+    if (!photoDataUrl) {
+      document.getElementById('err').style.display = 'block';
+      document.getElementById('err').textContent = 'Ambil foto dulu.';
+      return;
+    }
+    document.getElementById('loading').classList.add('show');
+    try {
+      // Kosongkan draft lama yang mungkin foto besar (dari sesi sebelumnya)
+      NbbStore.clearDraftCapture();
+      await NbbStore.simulateOcr(photoDataUrl);
+      location.href = 'list.html';
+    } catch (e) {
+      document.getElementById('err').style.display = 'block';
+      document.getElementById('err').textContent = String(e.message || e);
+      document.getElementById('loading').classList.remove('show');
+    }
+  };
+</script>
+</body>
+</html>

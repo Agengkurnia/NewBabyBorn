@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Login — New Baby Born</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <link rel="stylesheet" href="../../wwwroot/css/mobile.css"/>
+  <style>
+    .login-wrap {
+      height: 100%;
+      background: linear-gradient(145deg, #003d27 0%, #005D41 55%, #0a7a5a 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 28px 24px 32px;
+      position: relative;
+    }
+    .login-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 80% 10%, rgba(120,181,0,.25), transparent 45%);
+      pointer-events: none;
+    }
+    .brand { z-index: 1; margin-top: 48px; text-align: center; }
+    .brand h1 { font-size: 28px; font-weight: 700; margin: 10px 0 4px; }
+    .brand p { opacity: .85; font-size: 13px; }
+    .login-card {
+      z-index: 1; margin-top: auto;
+      background: rgba(255,255,255,.97);
+      border-radius: 16px;
+      padding: 20px;
+      color: #231F20;
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+    }
+    .login-card h2 { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+    .hint { font-size: 11px; color: #777; margin-top: 12px; }
+  </style>
+</head>
+<body>
+<div class="mobile-wrapper">
+  <div class="mobile-content no-nav" style="padding-bottom:0;height:100%">
+    <div class="login-wrap">
+      <div class="brand">
+        <span class="nbb-chip"><i class="fa-solid fa-baby"></i> NEW BABY BORN</span>
+        <h1>Falcon Mobile</h1>
+        <p>Prototype captura data newborn untuk BR</p>
+      </div>
+      <div class="login-card">
+        <h2>Masuk sebagai BR</h2>
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input id="username" class="form-control" value="br01" autocomplete="username"/>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input id="password" type="password" class="form-control" value="demo" autocomplete="current-password"/>
+        </div>
+        <div id="err" class="text-danger small mb-2" style="display:none"></div>
+        <button id="btnLogin" class="btn btn-primary-nbb">Masuk</button>
+        <p class="hint">Demo: <strong>br01 / demo</strong> atau <strong>br02 / demo</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../../wwwroot/js/nbb-store.js"></script>
+<script>
+  if (NbbStore.getSession()) location.href = 'home.html';
+  document.getElementById('btnLogin').addEventListener('click', () => {
+    const u = document.getElementById('username').value;
+    const p = document.getElementById('password').value;
+    const res = NbbStore.login(u, p);
+    const err = document.getElementById('err');
+    if (!res.ok) {
+      err.style.display = 'block';
+      err.textContent = res.message;
+      return;
+    }
+    location.href = 'home.html';
+  });
+  document.getElementById('password').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('btnLogin').click();
+  });
+</script>
+</body>
+</html>

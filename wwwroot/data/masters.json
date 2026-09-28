@@ -1,0 +1,209 @@
+{
+  "cabang": [
+    { "id": "C-JKT1", "nama": "JAKARTA I" },
+    { "id": "C-JKT2", "nama": "JAKARTA II" },
+    { "id": "C-BDG", "nama": "BANDUNG" }
+  ],
+  "rayon": [
+    { "id": "R-JKTBR", "cabangId": "C-JKT1", "nama": "JAKARTA BARAT" },
+    { "id": "R-JKTST", "cabangId": "C-JKT1", "nama": "JAKARTA SELATAN" },
+    { "id": "R-JKTUT", "cabangId": "C-JKT2", "nama": "JAKARTA UTARA" },
+    { "id": "R-BDGKT", "cabangId": "C-BDG", "nama": "BANDUNG KOTA" }
+  ],
+  "jenisSubmission": [
+    { "id": "JS-PARTUS", "nama": "PARTUS VERIFIKASI BMT", "statusSaatIni": "PROSPEK", "statusHasilCall": "PROSPEK KOMP" },
+    { "id": "JS-NBB", "nama": "NEW BABY BORN", "statusSaatIni": "PRO NC", "statusHasilCall": "PRE NC" },
+    { "id": "JS-ANC", "nama": "ANC VISIT", "statusSaatIni": "PROSPEK", "statusHasilCall": "PROSPEK KOMP" }
+  ],
+  "namaProject": [
+    { "id": "PRJ-NBB26", "jenisSubmissionId": "JS-NBB", "nama": "NBB Campaign 2026" },
+    { "id": "PRJ-BMT", "jenisSubmissionId": "JS-PARTUS", "nama": "BMT Q2 2026" }
+  ],
+  "brList": [
+    { "id": "BR-01", "cabangId": "C-JKT1", "nama": "M. MOHAN FADILLAH" },
+    { "id": "BR-02", "cabangId": "C-JKT1", "nama": "SITI RAHMA" },
+    { "id": "BR-03", "cabangId": "C-JKT2", "nama": "ANDI PRATAMA" },
+    { "id": "BR-04", "cabangId": "C-BDG", "nama": "DEWI LESTARI" }
+  ],
+  "sumberData": [
+    { "id": "SD-01", "cabangId": "C-JKT1", "nama": "RS AMINAH" },
+    { "id": "SD-02", "cabangId": "C-JKT1", "nama": "RS PURI INDAH" },
+    { "id": "SD-03", "cabangId": "C-JKT2", "nama": "RS PELNI" },
+    { "id": "SD-04", "cabangId": "C-BDG", "nama": "RS SANTO BORROMEUS" }
+  ],
+  "produkProspek": [
+    { "id": "P-SGM1", "jenisSubmissionId": "JS-NBB", "nama": "SGM Eksplor 1+" },
+    { "id": "P-SGM0", "jenisSubmissionId": "JS-NBB", "nama": "SGM LL 0-6" },
+    { "id": "P-BMT", "jenisSubmissionId": "JS-PARTUS", "nama": "BMT Prenagen" },
+    { "id": "P-ANC", "jenisSubmissionId": "JS-ANC", "nama": "Prenagen Mommy" }
+  ],
+  "produkKompetitor": [
+    { "id": "K-01", "nama": "Kompetitor A - Susu Formula" },
+    { "id": "K-02", "nama": "Kompetitor B - Susu Formula" },
+    { "id": "K-03", "nama": "Tidak ada" }
+  ],
+  "hubunganPic": [
+    { "id": "H-IBU", "nama": "Ibu" },
+    { "id": "H-AYAH", "nama": "Ayah" },
+    { "id": "H-NENEK", "nama": "Nenek" },
+    { "id": "H-LAIN", "nama": "Lainnya" }
+  ],
+  "propinsi": [
+    { "id": "31", "nama": "DKI JAKARTA" },
+    { "id": "32", "nama": "JAWA BARAT" }
+  ],
+  "kota": [
+    { "id": "3174", "propinsiId": "31", "nama": "JAKARTA BARAT" },
+    { "id": "3171", "propinsiId": "31", "nama": "JAKARTA SELATAN" },
+    { "id": "3273", "propinsiId": "32", "nama": "BANDUNG" }
+  ],
+  "kecamatan": [
+    { "id": "317401", "kotaId": "3174", "nama": "KALI DERES" },
+    { "id": "317402", "kotaId": "3174", "nama": "CENGKARENG" },
+    { "id": "317101", "kotaId": "3171", "nama": "KEBAYORAN BARU" },
+    { "id": "327301", "kotaId": "3273", "nama": "COBLONG" }
+  ],
+  "kelurahan": [
+    { "id": "3174011001", "kecamatanId": "317401", "nama": "KAMAL" },
+    { "id": "3174021001", "kecamatanId": "317402", "nama": "RAWA BUAYA" },
+    { "id": "3171011001", "kecamatanId": "317101", "nama": "SENAYAN" },
+    { "id": "3273011001", "kecamatanId": "327301", "nama": "DAGO" }
+  ],
+  "ocrSamples": [
+    {
+      "namaDepanPic": "Sari",
+      "namaBelakangPic": "Wulandari",
+      "jnsKelaminPic": "Perempuan",
+      "tglLahirPic": "1998-03-12",
+      "noHp": "081234567890",
+      "alamat": "Jl. Kamal Raya No. 12",
+      "rt": "002",
+      "rw": "005",
+      "namaDepanPelanggan": "Alya",
+      "namaBelakangPelanggan": "Putri",
+      "jnsKelaminPelanggan": "Perempuan",
+      "tglLahirPelanggan": "2026-07-10",
+      "hubunganDgnPic": "H-IBU",
+      "medicalRecord": "MR-2026-0710-01",
+      "usiaHamilMinggu": 0,
+      "bitPicAdalahPelanggan": false,
+      "jenisSubmissionId": "JS-NBB",
+      "sumberDataId": "SD-01",
+      "produkProspekId": "P-SGM0",
+      "cabangId": "C-JKT1",
+      "rayonId": "R-JKTBR",
+      "propinsiId": "31",
+      "kotaId": "3174",
+      "kecamatanId": "317401",
+      "kelurahanId": "3174011001"
+    },
+    {
+      "namaDepanPic": "Budi",
+      "namaBelakangPic": "Santoso",
+      "jnsKelaminPic": "Laki-laki",
+      "tglLahirPic": "1995-08-20",
+      "noHp": "081298765432",
+      "alamat": "Jl. Fatmawati No. 88",
+      "rt": "001",
+      "rw": "003",
+      "namaDepanPelanggan": "Rafi",
+      "namaBelakangPelanggan": "Santoso",
+      "jnsKelaminPelanggan": "Laki-laki",
+      "tglLahirPelanggan": "2026-07-08",
+      "hubunganDgnPic": "H-AYAH",
+      "medicalRecord": "MR-2026-0708-14",
+      "usiaHamilMinggu": 0,
+      "bitPicAdalahPelanggan": false,
+      "jenisSubmissionId": "JS-NBB",
+      "sumberDataId": "SD-01",
+      "produkProspekId": "P-SGM1",
+      "cabangId": "C-JKT1",
+      "rayonId": "R-JKTBR",
+      "propinsiId": "31",
+      "kotaId": "3171",
+      "kecamatanId": "317101",
+      "kelurahanId": "3171011001"
+    },
+    {
+      "namaDepanPic": "Dewi",
+      "namaBelakangPic": "Lestari",
+      "jnsKelaminPic": "Perempuan",
+      "tglLahirPic": "1997-11-05",
+      "noHp": "081311223344",
+      "alamat": "Jl. Rawa Buaya No. 5",
+      "rt": "004",
+      "rw": "007",
+      "namaDepanPelanggan": "Naira",
+      "namaBelakangPelanggan": "Lestari",
+      "jnsKelaminPelanggan": "Perempuan",
+      "tglLahirPelanggan": "2026-07-12",
+      "hubunganDgnPic": "H-IBU",
+      "medicalRecord": "MR-2026-0712-03",
+      "usiaHamilMinggu": 0,
+      "bitPicAdalahPelanggan": false,
+      "jenisSubmissionId": "JS-NBB",
+      "sumberDataId": "SD-01",
+      "produkProspekId": "P-SGM0",
+      "cabangId": "C-JKT1",
+      "rayonId": "R-JKTBR",
+      "propinsiId": "31",
+      "kotaId": "3174",
+      "kecamatanId": "317402",
+      "kelurahanId": "3174021001"
+    },
+    {
+      "namaDepanPic": "Andi",
+      "namaBelakangPic": "Wijaya",
+      "jnsKelaminPic": "Laki-laki",
+      "tglLahirPic": "1994-02-18",
+      "noHp": "082155667788",
+      "alamat": "Jl. Meruya Utara No. 21",
+      "rt": "006",
+      "rw": "002",
+      "namaDepanPelanggan": "Kenzo",
+      "namaBelakangPelanggan": "Wijaya",
+      "jnsKelaminPelanggan": "Laki-laki",
+      "tglLahirPelanggan": "2026-07-09",
+      "hubunganDgnPic": "H-AYAH",
+      "medicalRecord": "MR-2026-0709-22",
+      "usiaHamilMinggu": 0,
+      "bitPicAdalahPelanggan": false,
+      "jenisSubmissionId": "JS-NBB",
+      "sumberDataId": "SD-01",
+      "produkProspekId": "P-SGM1",
+      "cabangId": "C-JKT1",
+      "rayonId": "R-JKTBR",
+      "propinsiId": "31",
+      "kotaId": "3174",
+      "kecamatanId": "317401",
+      "kelurahanId": "3174011001"
+    },
+    {
+      "namaDepanPic": "Rina",
+      "namaBelakangPic": "Maulida",
+      "jnsKelaminPic": "Perempuan",
+      "tglLahirPic": "1999-06-30",
+      "noHp": "081577889900",
+      "alamat": "Jl. Kamal Dalam No. 9",
+      "rt": "003",
+      "rw": "001",
+      "namaDepanPelanggan": "Zoe",
+      "namaBelakangPelanggan": "Maulida",
+      "jnsKelaminPelanggan": "Perempuan",
+      "tglLahirPelanggan": "2026-07-11",
+      "hubunganDgnPic": "H-IBU",
+      "medicalRecord": "MR-2026-0711-08",
+      "usiaHamilMinggu": 0,
+      "bitPicAdalahPelanggan": false,
+      "jenisSubmissionId": "JS-NBB",
+      "sumberDataId": "SD-01",
+      "produkProspekId": "P-SGM0",
+      "cabangId": "C-JKT1",
+      "rayonId": "R-JKTBR",
+      "propinsiId": "31",
+      "kotaId": "3174",
+      "kecamatanId": "317401",
+      "kelurahanId": "3174011001"
+    }
+  ]
+}

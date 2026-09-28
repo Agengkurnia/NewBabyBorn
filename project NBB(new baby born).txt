@@ -1,0 +1,10 @@
+project NBB(new baby born)
+
+background , 
+jadi saat ini pegawai kalbe BR (branch regional) kalbe nutritonals, mendatangi beberapa rumah sakit dan memfoto buku baby born untuk di input kedalam system CRM menggunakan aplikasi desktop. nah maslash yang sering terjadi adalah BR ini memberikan data ini ke admin dan admin menginputkan kedalam system. tapi ketika nomor hp tersebut di hubungi, ternyata itu data fiktif(tidak punya anak atau anaknya sudah besar dll)
+
+nah nantinya akan dibuatkan system ke falcon mobile (sudah ada). jadi nanti akan dimasukan menunya kesana. jadi nantinya BR hanya akan foto saja tanpa input data. ketika di foto maka akan teruput datanya kesystem dengan OCR
+
+
+
+1. 

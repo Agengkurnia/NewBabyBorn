@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Profil — New Baby Born</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <link rel="stylesheet" href="../../wwwroot/css/mobile.css"/>
+</head>
+<body>
+<div class="mobile-wrapper">
+  <div class="mobile-header">
+    <span style="width:24px"></span>
+    <div class="title">Profil</div>
+    <span class="nbb-chip" style="font-size:10px;padding:2px 8px">NBB</span>
+  </div>
+  <div class="mobile-content">
+    <div style="padding:16px">
+      <div class="card-soft">
+        <div class="small text-muted">Pengguna</div>
+        <div style="font-size:18px;font-weight:700" id="nama">—</div>
+        <div class="small" id="meta">—</div>
+      </div>
+      <div class="card-soft">
+        <h6 style="font-weight:700">API stub (prototype)</h6>
+        <p class="small text-muted mb-2">Default memakai mock lokal. Matikan mock bila backend sudah siap.</p>
+        <div class="form-check form-switch mb-2">
+          <input class="form-check-input" type="checkbox" id="useMock" checked/>
+          <label class="form-check-label" for="useMock">Gunakan mock submit</label>
+        </div>
+        <label class="form-label">API base URL</label>
+        <input class="form-control mb-2" id="apiBaseUrl" placeholder="/api/nbb"/>
+        <button class="btn btn-outline-nbb" id="btnSaveCfg" type="button">Simpan konfigurasi</button>
+      </div>
+      <button class="btn btn-outline-nbb text-danger" id="btnLogout" type="button" style="border-color:#C62828;color:#C62828">
+        <i class="fa-solid fa-right-from-bracket me-2"></i>Keluar
+      </button>
+      <button class="btn btn-ghost mt-2 w-100" id="btnFree" type="button" style="font-size:12px;color:#888">
+        Bersihkan cache foto (jika penyimpanan penuh)
+      </button>
+    </div>
+  </div>
+  <div id="toast" class="toast-nbb"></div>
+  <nav class="bottom-nav">
+    <a href="home.html"><i class="fa-solid fa-house"></i>Beranda</a>
+    <a href="history.html"><i class="fa-solid fa-clock-rotate-left"></i>Riwayat</a>
+    <a href="profil.html" class="active"><i class="fa-solid fa-user"></i>Profil</a>
+  </nav>
+</div>
+<script src="../../wwwroot/js/nbb-store.js"></script>
+<script>
+  const s = NbbStore.requireSession();
+  if (!s) throw new Error('no session');
+  document.getElementById('nama').textContent = s.nama;
+  document.getElementById('meta').textContent = s.username + ' · BR ID ' + s.brId + ' · Cabang ' + s.cabangId;
+  const cfg = NbbStore.getConfig();
+  document.getElementById('useMock').checked = !!cfg.useMock;
+  document.getElementById('apiBaseUrl').value = cfg.apiBaseUrl || '';
+  document.getElementById('btnSaveCfg').onclick = () => {
+    NbbStore.setConfig({
+      useMock: document.getElementById('useMock').checked,
+      apiBaseUrl: document.getElementById('apiBaseUrl').value.trim() || '/api/nbb'
+    });
+    const t = document.getElementById('toast');
+    t.textContent = 'Konfigurasi disimpan';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  };
+  document.getElementById('btnLogout').onclick = () => {
+    NbbStore.logout();
+    location.href = 'login.html';
+  };
+  document.getElementById('btnFree').onclick = () => {
+    NbbStore.freeStorage();
+    const t = document.getElementById('toast');
+    t.textContent = 'Cache foto dibersihkan';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  };
+</script>
+</body>
+</html>

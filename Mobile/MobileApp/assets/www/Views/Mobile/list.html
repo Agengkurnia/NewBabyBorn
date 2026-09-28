@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Hasil OCR — New Baby Born</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <link rel="stylesheet" href="../../wwwroot/css/mobile.css"/>
+  <style>
+    .footer-actions {
+      position: sticky; bottom: 0; background: #fff;
+      border-top: 1px solid var(--color-border);
+      padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; z-index: 50;
+    }
+    .context-panel .form-label { margin-top: 6px; }
+    .progress-verify {
+      font-size: 13px; font-weight: 600; color: var(--color-primary);
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="mobile-wrapper">
+  <div class="mobile-header">
+    <a href="home.html" id="backLink"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="title" id="pageTitle">List hasil OCR</div>
+    <span class="nbb-chip" style="font-size:10px;padding:2px 8px">NBB</span>
+  </div>
+  <div class="photo-strip" id="photoStrip">
+    <img id="thumb" alt="foto"/>
+    <div>
+      <div style="font-size:12px;font-weight:600" id="stripTitle">Bukti foto buku</div>
+      <div class="small text-muted" id="stripSub">Verifikasi tiap baris, lalu kirim</div>
+    </div>
+  </div>
+  <div class="mobile-content no-nav" style="padding-bottom:0;display:flex;flex-direction:column">
+    <div style="flex:1;overflow-y:auto;padding:12px 16px">
+      <div class="card-soft context-panel">
+        <h6 style="font-weight:700;margin-bottom:8px" id="ctxTitle">Konteks foto (shared)</h6>
+        <div class="mb-1"><label class="form-label">Cabang <span class="req">*</span></label><select class="form-select form-select-sm" id="cabangId"></select></div>
+        <div class="mb-1"><label class="form-label">Rayon</label><select class="form-select form-select-sm" id="rayonId"></select></div>
+        <div class="mb-1"><label class="form-label">Jenis Submission <span class="req">*</span></label><select class="form-select form-select-sm" id="jenisSubmissionId"></select></div>
+        <div class="mb-1"><label class="form-label">Nama Project</label><select class="form-select form-select-sm" id="namaProjectId"></select></div>
+        <div class="mb-1"><label class="form-label">Nama BR / MAE <span class="req">*</span></label><select class="form-select form-select-sm" id="brId"></select></div>
+        <div class="mb-1"><label class="form-label">Sumber Data <span class="req">*</span></label><select class="form-select form-select-sm" id="sumberDataId"></select></div>
+      </div>
+
+      <div class="progress-verify" id="progressText">0 / 0 terverifikasi</div>
+      <button type="button" class="btn btn-outline-nbb mb-2" id="btnAddRow" style="display:none">
+        <i class="fa-solid fa-plus me-2"></i>Tambah baris
+      </button>
+      <div id="itemList"></div>
+      <div id="ctxErr" class="text-danger small" style="display:none"></div>
+    </div>
+    <div class="footer-actions">
+      <button class="btn btn-outline-nbb" id="btnSaveDraft" type="button">Simpan draft</button>
+      <button class="btn btn-primary-nbb" id="btnSubmit" type="button" disabled>
+        <i class="fa-solid fa-cloud-arrow-up me-2"></i><span id="btnSubmitLabel">Kirim data foto ini</span>
+      </button>
+    </div>
+  </div>
+  <div id="toast" class="toast-nbb"></div>
+  <div class="loading-overlay" id="loading">
+    <div class="spinner-border text-success"></div>
+    <div style="font-weight:600;color:#005D41">Mengirim data…</div>
+  </div>
+</div>
+<script src="../../wwwroot/js/nbb-store.js"></script>
+<script src="../../wwwroot/js/nbb-api.js"></script>
+<script>
+(() => {
+  const session = NbbStore.requireSession();
+  if (!session) return;
+
+  let masters = null;
+  let batch = NbbStore.getDraftCapture();
+
+  const params = new URLSearchParams(location.search);
+  const batchIdParam = params.get('batchId');
+  if (batchIdParam) {
+    const opened = NbbStore.openBatchForEdit(batchIdParam);
+    if (opened) batch = opened;
+  }
+
+  if (!batch || !Array.isArray(batch.items)) {
+    location.href = 'home.html';
+    return;
+  }
+
+  const isManual = batch.inputMode === 'manual' || !batch.photoDataUrl;
+  const photoStrip = document.getElementById('photoStrip');
+  if (isManual) {
+    photoStrip.style.display = 'none';
+    document.getElementById('pageTitle').textContent = 'Input manual';
+    document.getElementById('ctxTitle').textContent = 'Konteks (shared)';
+    document.getElementById('btnSubmitLabel').textContent = 'Kirim data ini';
+    document.getElementById('btnAddRow').style.display = 'block';
+    document.getElementById('backLink').setAttribute('href', 'home.html');
+  } else {
+    document.getElementById('thumb').src = batch.photoDataUrl;
+    document.getElementById('backLink').setAttribute('href', 'capture.html');
+  }
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  if (params.get('verified') === '1') {
+    toast('Baris ditandai terverifikasi');
+    history.replaceState({}, '', 'list.html');
+  }
+
+  function fillSelect(el, rows, emptyLabel) {
+    el.innerHTML = '';
+    if (emptyLabel !== false) {
+      const o = document.createElement('option');
+      o.value = '';
+      o.textContent = emptyLabel || 'Pilih';
+      el.appendChild(o);
+    }
+    rows.forEach((r) => {
+      const o = document.createElement('option');
+      o.value = r.id;
+      o.textContent = r.nama;
+      el.appendChild(o);
+    });
+  }
+
+  function refreshDependent() {
+    const cabangId = document.getElementById('cabangId').value;
+    const jsId = document.getElementById('jenisSubmissionId').value;
+    fillSelect(document.getElementById('rayonId'), (masters.rayon || []).filter((x) => x.cabangId === cabangId));
+    fillSelect(document.getElementById('brId'), (masters.brList || []).filter((x) => x.cabangId === cabangId));
+    fillSelect(document.getElementById('sumberDataId'), (masters.sumberData || []).filter((x) => x.cabangId === cabangId));
+    fillSelect(document.getElementById('namaProjectId'), (masters.namaProject || []).filter((x) => !jsId || x.jenisSubmissionId === jsId), 'Tidak ada / NULL');
+  }
+
+  function setVal(id, v) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = v == null ? '' : v;
+  }
+
+  function readContext() {
+    return {
+      cabangId: document.getElementById('cabangId').value,
+      rayonId: document.getElementById('rayonId').value,
+      jenisSubmissionId: document.getElementById('jenisSubmissionId').value,
+      namaProjectId: document.getElementById('namaProjectId').value,
+      brId: document.getElementById('brId').value,
+      sumberDataId: document.getElementById('sumberDataId').value
+    };
+  }
+
+  function persistContext() {
+    batch = NbbStore.updateDraftContext(readContext()) || batch;
+  }
+
+  function renderList() {
+    batch = NbbStore.getDraftCapture() || batch;
+    const vc = NbbStore.verifiedCounts(batch);
+    document.getElementById('progressText').textContent =
+      vc.verified + ' / ' + vc.total + ' terverifikasi';
+
+    const can = NbbStore.canSubmitBatch(batch);
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled = !can.ok;
+    btn.title = can.ok ? '' : (can.errors[0] || '');
+
+    const box = document.getElementById('itemList');
+    if (!(batch.items || []).length) {
+      box.innerHTML = '<div class="text-center text-muted py-3 small">Belum ada baris. Klik <strong>Tambah baris</strong>.</div>';
+    } else {
+      box.innerHTML = (batch.items || []).map((it, idx) => {
+        const name = ((it.namaDepanPic || '') + ' ' + (it.namaBelakangPic || '')).trim() || 'Tanpa nama';
+        const bayi = ((it.namaDepanPelanggan || '') + ' ' + (it.namaBelakangPelanggan || '')).trim();
+        const badge = it.verified
+          ? '<span class="verify-badge verified"><i class="fa-solid fa-check"></i> Verified</span>'
+          : '<span class="verify-badge pending">Belum</span>';
+        return `<a class="ocr-row" href="review.html?itemId=${encodeURIComponent(it.id)}">
+          <div class="idx">${idx + 1}</div>
+          <div class="body">
+            <div class="name">${name}</div>
+            <div class="sub">${it.noHp || '—'} · ${bayi || '—'}</div>
+          </div>
+          ${badge}
+          <i class="fa-solid fa-chevron-right chev"></i>
+        </a>`;
+      }).join('');
+    }
+  }
+
+  async function init() {
+    masters = await NbbStore.ensureMasters();
+    fillSelect(document.getElementById('cabangId'), masters.cabang || [], false);
+    fillSelect(document.getElementById('jenisSubmissionId'), masters.jenisSubmission || []);
+    setVal('cabangId', batch.cabangId);
+    refreshDependent();
+    setVal('rayonId', batch.rayonId);
+    setVal('jenisSubmissionId', batch.jenisSubmissionId);
+    refreshDependent();
+    setVal('namaProjectId', batch.namaProjectId);
+    setVal('brId', batch.brId);
+    setVal('sumberDataId', batch.sumberDataId);
+
+    ['cabangId', 'jenisSubmissionId'].forEach((id) => {
+      document.getElementById(id).addEventListener('change', () => {
+        const keep = readContext();
+        refreshDependent();
+        Object.entries(keep).forEach(([k, v]) => {
+          if (k !== 'cabangId' && k !== 'jenisSubmissionId' && v) setVal(k, v);
+        });
+        persistContext();
+        renderList();
+      });
+    });
+    ['rayonId', 'namaProjectId', 'brId', 'sumberDataId'].forEach((id) => {
+      document.getElementById(id).addEventListener('change', () => {
+        persistContext();
+        renderList();
+      });
+    });
+
+    renderList();
+  }
+
+  document.getElementById('btnAddRow').onclick = () => {
+    persistContext();
+    const res = NbbStore.addManualItem();
+    if (!res.ok) {
+      toast(res.errors[0] || 'Gagal menambah baris');
+      return;
+    }
+    batch = res.batch;
+    renderList();
+    location.href = 'review.html?itemId=' + encodeURIComponent(res.item.id);
+  };
+
+  document.getElementById('btnSaveDraft').onclick = () => {
+    persistContext();
+    batch = NbbStore.getDraftCapture();
+    const res = NbbStore.saveDraftBatch(batch);
+    const err = document.getElementById('ctxErr');
+    if (!res.ok) {
+      err.style.display = 'block';
+      err.innerHTML = res.errors.map((e) => '• ' + e).join('<br/>');
+      return;
+    }
+    location.href = 'history.html?saved=1';
+  };
+
+  document.getElementById('btnSubmit').onclick = async () => {
+    persistContext();
+    batch = NbbStore.getDraftCapture();
+    const check = NbbStore.canSubmitBatch(batch);
+    const err = document.getElementById('ctxErr');
+    if (!check.ok) {
+      err.style.display = 'block';
+      err.innerHTML = check.errors.map((e) => '• ' + e).join('<br/>');
+      return;
+    }
+    err.style.display = 'none';
+    NbbStore.persistDraftBatch();
+    document.getElementById('loading').classList.add('show');
+    const res = await NbbApi.submitBatch(batch.id);
+    document.getElementById('loading').classList.remove('show');
+    if (!res.ok) {
+      toast(res.message);
+      renderList();
+      return;
+    }
+    location.href = 'history.html?sent=1';
+  };
+
+  init();
+})();
+</script>
+</body>
+</html>
