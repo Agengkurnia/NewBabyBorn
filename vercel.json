@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/Views/Mobile/login.html",
+      "permanent": false
+    }
+  ]
+}
